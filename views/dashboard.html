@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/views/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/public/js/dashboard.js" defer></script>
+    <title>Comparação de Colaboradores</title>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="dashboard.html" class="sidebar-link active">Comparação de Colaboradores</a>
+        <a href="manage.html" class="sidebar-link">Gerenciar Colaboradores</a>
+    </div>
+
+    <div class="dashboard-container">
+        <h1>Comparação de colaboradores:</h1>
+        <div id="employee-list" class="employee-list"></div>
+        <div style="height: 400px;">
+            <canvas id="skillsRadarChart"></canvas>
+        </div>
+        <table id="skills-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <!-- Cabeçalho será preenchido dinamicamente -->
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</body>
+</html>

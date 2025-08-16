@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/views/style.css">
+<title>Login</title>
+</head>
+<body>
+<div class="page-container">
+    <h1 class="info-titulo">Faça seu Login</h1>
+    <div class="main-container">
+        <h2 class="sub-titulo">Insira seus dados:</h2>
+        <form action="/login" method="post">
+            <input type="text" name="usuario" placeholder="Usuário" class="input-box" required><br><br>
+            <input type="password" name="senha" placeholder="Senha" class="input-box" required><br><br>
+            <button type="submit" class="submit-button">Entrar</button>
+        </form>
+        <div class="ajuda-container">
+            <span>Precisa de ajuda?</span>
+            <a href="https://portfolio-ten-navy-98.vercel.app/" target="_blank">Clique aqui.</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

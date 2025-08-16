@@ -1,0 +1,159 @@
+/* Reset básico */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --color-primary: #af2ae4;
+    --color-primary-dark: #d083ee;
+    --color-primary-light: #e3eaf5;
+    --color-secondary: #e656f3;
+    --color-bg: #ffa3e8;
+    --color-bg-light: #f8fafc;
+    --color-white: #fff;
+    --color-text: #222;
+    --color-table-hover: #d0e2ff;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 40px;
+    z-index: 100;
+    box-shadow: 2px 0 8px rgba(42,122,228,0.08);
+}
+
+.sidebar-link {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 1.15rem;
+    padding: 16px 32px;
+    width: 100%;
+    display: block;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 0 24px 24px 0;
+    margin-bottom: 8px;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background: var(--color-primary-dark);
+    color: var(--color-primary-light);
+}
+
+.dashboard-container {
+    max-width: 900px;
+    margin: 40px auto 40px 240px;
+    background: var(--color-white);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 40px;
+}
+
+h1 { font-size: 2.2rem; margin-bottom: 24px; color: var(--color-primary); }
+h2 { font-size: 1.3rem; margin-top: 24px; color: var(--color-secondary); }
+
+label { font-weight: 500; margin-bottom: 8px; display: block; }
+
+input[type="text"], input[type="number"] {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--color-primary-light);
+    margin: 4px 0 12px 0;
+    font-size: 1rem;
+    background: var(--color-bg-light);
+    color: var(--color-text);
+    width: 120px;
+}
+
+button {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 4px 2px;
+    transition: background 0.2s;
+}
+
+button:hover { background: var(--color-primary-dark); }
+
+form { margin-bottom: 24px; }
+hr { margin: 32px 0; border: none; border-top: 1px solid #e3eaf5; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    background: var(--color-bg-light);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(42,122,228,0.08);
+}
+
+th, td { padding: 12px 16px; text-align: center; }
+th { background: var(--color-primary); color: var(--color-white); font-weight: 600; }
+
+tr:nth-child(even) { background: var(--color-primary-light); }
+tr:hover { background: var(--color-table-hover); transition: background 0.2s; }
+
+.compare-switch {
+    width: 40px;
+    height: 22px;
+    position: relative;
+    appearance: none;
+    background: var(--color-primary-light);
+    outline: none;
+    border-radius: 12px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.compare-switch:checked { background: var(--color-primary); }
+
+.compare-switch::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transition: left 0.2s;
+}
+
+.compare-switch:checked::before { left: 22px; }
+
+canvas#skillsRadarChart {
+    display: block;
+    margin: 0 auto 32px auto;
+    background: var(--color-bg-light);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(42,122,228,0.08);
+    max-width: 400px;
+    max-height: 400px;
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 900px) {
+    .dashboard-container { margin-left: 0; padding: 16px 8px; }
+    .sidebar { position: static; width: 100vw; height: auto; flex-direction: row; padding-top: 0; box-shadow: none; }
+    .sidebar-link { font-size: 1rem; padding: 12px 8px; border-radius: 0; margin-bottom: 0; text-align: center; }
+    table th, table td { padding: 8px 4px; font-size: 0.95rem; }
+    input[type="text"], input[type="number"] { width: 80px; font-size: 0.95rem; }
+}
