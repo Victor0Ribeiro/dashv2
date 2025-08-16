@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Habilidades</title>
+  <script src="/public/js/sidebar.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="skills.js" defer></script>
+</head>
+<body>
+  <div class="sidebar">
+    <a href="dashboard.html" class="sidebar-link">Comparação de Colaboradores</a>
+    <a href="manage.html" class="sidebar-link">Gerenciar Colaboradores</a>
+    <a href="skills.html" class="sidebar-link active">Gerenciar Habilidades</a>
+  </div>
+
+  <div class="dashboard-container">
+    <h1>Gerenciar Habilidades</h1>
+    
+    <section>
+      <h2>Habilidades Existentes</h2>
+      <ul id="skills-list"></ul>
+    </section>
+    
+    <section>
+      <h2>Adicionar Nova Habilidade</h2>
+      <input type="text" id="new-skill-name" placeholder="Nome da habilidade">
+      <button id="add-skill">Adicionar Habilidade</button>
+    </section>
+  </div>
+</body>
+</html>

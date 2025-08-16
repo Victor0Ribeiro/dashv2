@@ -1,5 +1,9 @@
 /* Reset básico */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 :root {
     --color-primary: #af2ae4;
@@ -13,12 +17,14 @@
     --color-table-hover: #d0e2ff;
 }
 
+/* Corpo e fonte */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: var(--color-bg);
     color: var(--color-text);
 }
 
+/* Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
@@ -46,11 +52,13 @@ body {
     margin-bottom: 8px;
 }
 
-.sidebar-link:hover, .sidebar-link.active {
+.sidebar-link:hover,
+.sidebar-link.active {
     background: var(--color-primary-dark);
     color: var(--color-primary-light);
 }
 
+/* Conteúdo principal */
 .dashboard-container {
     max-width: 900px;
     margin: 40px auto 40px 240px;
@@ -60,10 +68,24 @@ body {
     padding: 32px 40px;
 }
 
-h1 { font-size: 2.2rem; margin-bottom: 24px; color: var(--color-primary); }
-h2 { font-size: 1.3rem; margin-top: 24px; color: var(--color-secondary); }
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 24px;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+}
 
-label { font-weight: 500; margin-bottom: 8px; display: block; }
+h2 {
+    font-size: 1.3rem;
+    margin-top: 24px;
+    color: var(--color-secondary);
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
 
 input[type="text"], input[type="number"] {
     padding: 6px 10px;
@@ -89,11 +111,21 @@ button {
     transition: background 0.2s;
 }
 
-button:hover { background: var(--color-primary-dark); }
+button:hover {
+    background: var(--color-primary-dark);
+}
 
-form { margin-bottom: 24px; }
-hr { margin: 32px 0; border: none; border-top: 1px solid #e3eaf5; }
+form {
+    margin-bottom: 24px;
+}
 
+hr {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid #e3eaf5;
+}
+
+/* Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -104,12 +136,28 @@ table {
     box-shadow: 0 2px 8px rgba(42,122,228,0.08);
 }
 
-th, td { padding: 12px 16px; text-align: center; }
-th { background: var(--color-primary); color: var(--color-white); font-weight: 600; }
+th, td {
+    padding: 12px 16px;
+    text-align: center;
+}
 
-tr:nth-child(even) { background: var(--color-primary-light); }
-tr:hover { background: var(--color-table-hover); transition: background 0.2s; }
+th {
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 1rem;
+}
 
+tr:nth-child(even) {
+    background: var(--color-primary-light);
+}
+
+tr:hover {
+    background: var(--color-table-hover);
+    transition: background 0.2s;
+}
+
+/* Switch de comparação */
 .compare-switch {
     width: 40px;
     height: 22px;
@@ -122,7 +170,9 @@ tr:hover { background: var(--color-table-hover); transition: background 0.2s; }
     cursor: pointer;
 }
 
-.compare-switch:checked { background: var(--color-primary); }
+.compare-switch:checked {
+    background: var(--color-primary);
+}
 
 .compare-switch::before {
     content: '';
@@ -136,8 +186,12 @@ tr:hover { background: var(--color-table-hover); transition: background 0.2s; }
     transition: left 0.2s;
 }
 
-.compare-switch:checked::before { left: 22px; }
+.compare-switch:checked::before {
+    left: 22px;
+    background: #fff;
+}
 
+/* Canvas do gráfico */
 canvas#skillsRadarChart {
     display: block;
     margin: 0 auto 32px auto;
@@ -150,10 +204,33 @@ canvas#skillsRadarChart {
     height: auto;
 }
 
+/* Responsivo */
 @media (max-width: 900px) {
-    .dashboard-container { margin-left: 0; padding: 16px 8px; }
-    .sidebar { position: static; width: 100vw; height: auto; flex-direction: row; padding-top: 0; box-shadow: none; }
-    .sidebar-link { font-size: 1rem; padding: 12px 8px; border-radius: 0; margin-bottom: 0; text-align: center; }
-    table th, table td { padding: 8px 4px; font-size: 0.95rem; }
-    input[type="text"], input[type="number"] { width: 80px; font-size: 0.95rem; }
+    .dashboard-container {
+        margin-left: 0;
+        padding: 16px 8px;
+    }
+    .sidebar {
+        position: static;
+        width: 100vw;
+        height: auto;
+        flex-direction: row;
+        padding-top: 0;
+        box-shadow: none;
+    }
+    .sidebar-link {
+        font-size: 1rem;
+        padding: 12px 8px;
+        border-radius: 0;
+        margin-bottom: 0;
+        text-align: center;
+    }
+    table th, table td {
+        padding: 8px 4px;
+        font-size: 0.95rem;
+    }
+    input[type="text"], input[type="number"] {
+        width: 80px;
+        font-size: 0.95rem;
+    }
 }
