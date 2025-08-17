@@ -1,0 +1,135 @@
+:root {
+    font-family: "Google Sans Code", monospace;
+    --fundo: #0d0d0d;
+    --texto: #ffffff;
+    --destaque: #8a1bb67e;
+    --cinza-secundario: #c0c0c0;
+    --fundo-secundario: rgba(152, 72, 184, 0.8);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    text-decoration: none;
+    background-color: var(--fundo);
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+}
+
+/* Título principal */
+.info-titulo {
+    background-color: var(--destaque);
+    padding: 25px;
+    border-radius: 28px;
+    box-shadow: 0px 0px 20px 0px #d272ff53;
+    border: 0.9px solid var(--cinza-secundario);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-titulo:hover {
+    transform: scale(1.03);
+    background-color: #810458;
+    box-shadow: 0 0 30px 5px #d272ff;
+}
+
+/* Container principal do form */
+.main-container {
+    position: relative; /* referência para o h2 absoluto */
+    margin-top: 55px;
+    background-color: var(--destaque);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 450px;
+    height: 400px;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0px 0px 20px 0px #d272ff53;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.main-container:hover {
+    transform: scale(1.03);
+    background-color: #810458;
+    box-shadow: 0 0 30px 5px #d272ff;
+}
+
+/* Título do formulário */
+.baseline {
+    font-weight: 800;
+    position: absolute;
+    top: 10px;       /* gruda no topo do container */
+    left: 50%;       /* centraliza horizontalmente */
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 22px;
+    color: var(--texto);
+}
+
+/* Inputs do formulário */
+.input-box {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bolder;
+    color: var(--texto);
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 2px solid var(--cinza-secundario);
+    border-radius: 30px;
+    background-color: var(--fundo-secundario);
+    color: var(--texto);
+    transition: border 0.3s ease, transform 0.3s ease;
+}
+
+.input-box:focus {
+    border-color: #d272ff;
+    transform: scale(1.02);
+    outline: none;
+}
+
+/* Botão de submit */
+.submit-button {
+    transform: scale(1.30);
+    margin-left: 40%;
+    background-color: var(--fundo-secundario);
+    color: var(--texto);
+    padding: 12px 25px;
+    font-size: 16px;
+    border: 1px solid var(--texto);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #ec3fff;
+    transform: scale(1.35);
+    box-shadow: 0 0 15px 3px #d272ff;
+}
+
+/* Container de ajuda */
+.ajuda-container {
+    margin-top: 20px;
+    color: var(--texto);
+    font-size: 14px;
+}
+
+.ajuda-container a {
+    color: #d272ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.ajuda-container a:hover {
+    color: #ffffff;
+}

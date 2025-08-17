@@ -6,9 +6,10 @@
 }
 
 :root {
+    font-family: "Google Sans Code", monospace;
     --color-primary: #af2ae4;
     --color-primary-dark: #d083ee;
-    --color-primary-light: #e3eaf5;
+    --color-primary-light: #e3e6f5;
     --color-secondary: #e656f3;
     --color-bg: #ffa3e8;
     --color-bg-light: #f8fafc;
@@ -22,6 +23,10 @@ body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: var(--color-bg);
     color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 /* Sidebar */
@@ -64,7 +69,7 @@ body {
     margin: 40px auto 40px 240px;
     background: var(--color-white);
     border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 24px rgba(142, 0, 0, 0.08);
     padding: 32px 40px;
 }
 

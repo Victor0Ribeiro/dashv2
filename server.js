@@ -12,8 +12,8 @@ const FILE = 'funcionarios.xlsx';
 const HEADERS = ['ID', 'Nome', 'Área', 'Paciência', 'Versatilidade', 'Comunicação'];
 
 // Usuário fixo para login
-const USER = 'admin';
-const PASS = '1234';
+const USER = 'Victor';
+const PASS = 'Ribeiro';
 
 async function readEmployees() {
     if (!fs.existsSync(FILE)) {
