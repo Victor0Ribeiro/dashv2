@@ -1,40 +1,96 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/views/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/public/js/sidebar.js" defer></script>
-    <script src="/public/js/dashboard.js" defer></script>
-    <title>Comparação de Colaboradores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comparação · Radar de Talentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <script src="/vendor/chart.js/chart.umd.min.js" defer></script>
+    <script type="module" src="/public/js/dashboard.js"></script>
 </head>
-
 <body>
-    <div class="sidebar">
-        <a href="dashboard.html" class="sidebar-link">Comparação de Colaboradores</a>
-        <a href="manage.html" class="sidebar-link">Gerenciar Colaboradores</a>
-        <a href="skills.html" class="sidebar-link active">Gerenciar Habilidades</a>
-    </div>
+    <div class="app">
+        <nav id="sidebar" class="sidebar" aria-label="Navegação principal"></nav>
 
+        <main class="main">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Comparação de colaboradores</h1>
+                    <p class="page-subtitle">Selecione até 6 pessoas para comparar as habilidades lado a lado.</p>
+                </div>
+            </header>
 
-    <div class="dashboard-container">
-        <h1>Comparação de colaboradores:</h1>
-        <div id="employee-list" class="employee-list"></div>
-        <div style="height: 400px;">
-            <canvas id="skillsRadarChart"></canvas>
-        </div>
-        <table id="skills-table">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <!-- Cabeçalho será preenchido dinamicamente -->
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+            <section class="stats" aria-label="Resumo">
+                <div class="stat">
+                    <span class="stat-label">Colaboradores</span>
+                    <strong class="stat-value" id="stat-employees">–</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Habilidades</span>
+                    <strong class="stat-value" id="stat-skills">–</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Média geral</span>
+                    <strong class="stat-value" id="stat-average">–</strong>
+                </div>
+            </section>
+
+            <div class="dashboard-grid">
+                <section class="card" aria-labelledby="list-title">
+                    <div class="card-header">
+                        <h2 class="card-title" id="list-title">Colaboradores</h2>
+                        <button type="button" class="btn btn-ghost btn-sm" id="clear-selection" disabled>Limpar seleção</button>
+                    </div>
+                    <label class="search">
+                        <span class="sr-only">Buscar colaborador</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="search" id="employee-search" class="input" placeholder="Buscar por nome" autocomplete="off">
+                    </label>
+                    <ul id="employee-list" class="chip-list" aria-label="Colaboradores disponíveis">
+                        <li class="skeleton" aria-hidden="true"></li>
+                        <li class="skeleton" aria-hidden="true"></li>
+                        <li class="skeleton" aria-hidden="true"></li>
+                    </ul>
+                </section>
+
+                <section class="card" aria-labelledby="chart-title">
+                    <div class="card-header">
+                        <h2 class="card-title" id="chart-title">Radar de habilidades</h2>
+                        <span class="badge" id="selection-count" aria-live="polite">0 selecionados</span>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas id="radar-chart" role="img" aria-label="Gráfico radar com as notas dos colaboradores selecionados. Os mesmos valores estão na tabela de detalhamento."></canvas>
+                        <div class="chart-empty" id="chart-empty">
+                            <p>Nenhum colaborador selecionado</p>
+                            <p>Escolha pessoas na lista para ver o radar.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="card section-gap" aria-labelledby="table-title">
+                <div class="card-header">
+                    <h2 class="card-title" id="table-title">Detalhamento</h2>
+                    <div class="legend" aria-hidden="true">
+                        <span><span class="score" data-level="high">8+</span> forte</span>
+                        <span><span class="score" data-level="mid">5–7</span> médio</span>
+                        <span><span class="score" data-level="low">0–4</span> a desenvolver</span>
+                    </div>
+                </div>
+                <div class="table-wrap" id="compare-table-wrap" hidden>
+                    <table class="table" id="compare-table">
+                        <caption class="sr-only">Notas dos colaboradores selecionados. O contorno indica a maior nota da coluna.</caption>
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <p class="empty" id="table-empty">Selecione colaboradores para ver as notas em detalhe.</p>
+            </section>
+        </main>
     </div>
 </body>
-
 </html>
