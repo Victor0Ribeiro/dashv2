@@ -1,7 +1,18 @@
 {
   "dependencies": {
-    "cors": "^2.8.5",
+    "chart.js": "^4.6.1",
     "exceljs": "^4.4.0",
     "express": "^5.1.0"
-  }
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "name": "dashv2",
+  "description": "Dashboard para comparar habilidades de colaboradores",
+  "engines": {
+    "node": ">=20"
+  },
+  "private": true
 }

@@ -1,27 +1,45 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/views/login.css">
-<title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar · Radar de Talentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <script src="/public/js/login.js" defer></script>
 </head>
-<body>
-<div class="page-container">
-    <h1 class="info-titulo">Faça seu Login</h1>
-    <div class="main-container">
-        <h2 class=" baseline sub-titulo">Insira seus dados:</h2><br><br>
-        <form action="/login" method="post">
-            <input type="text" name="usuario" placeholder="Usuário" class="input-box" required><br><br>
-            <input type="password" name="senha" placeholder="Senha" class="input-box" required><br><br>
-            <button type="submit" class="submit-button">Entrar</button>
-        </form><br><br>
-        <div class="ajuda-container">
-            <span>Precisa de ajuda?</span>
-            <a href="https://portfolio-ten-navy-98.vercel.app/#dashboard-colaborador" target="_blank">Clique aqui.</a>
+<body class="auth">
+    <main class="auth-card">
+        <div class="brand">
+            <span class="brand-mark" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2 21.5 8.9 17.9 20H6.1L2.5 8.9Z"/><path d="M12 7 16.8 10.5 15 16H9l-1.8-5.5Z"/></svg>
+            </span>
+            <span>Radar de Talentos</span>
         </div>
-    </div>
-</div>
+
+        <h1 class="auth-title">Bem-vindo de volta</h1>
+        <p class="auth-subtitle">Entre para comparar as habilidades da equipe.</p>
+
+        <form class="auth-form" action="/login" method="post">
+            <p class="alert" id="login-error" role="alert" hidden></p>
+            <div class="field">
+                <label class="label" for="usuario">Usuário</label>
+                <input type="text" class="input" id="usuario" name="usuario" autocomplete="username" required autofocus>
+            </div>
+            <div class="field">
+                <label class="label" for="senha">Senha</label>
+                <input type="password" class="input" id="senha" name="senha" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+
+        <p class="auth-help">
+            Precisa de ajuda?
+            <a href="https://portfolio-ten-navy-98.vercel.app/#dashboard-colaborador" target="_blank" rel="noopener noreferrer">Veja o tutorial</a>
+        </p>
+    </main>
 </body>
 </html>

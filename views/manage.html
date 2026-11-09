@@ -1,60 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciar Funcionários</title>
-    <link rel="stylesheet" href="/views/style.css">
-    <script src="/public/js/sidebar.js" defer></script>
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Colaboradores · Radar de Talentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <script type="module" src="/public/js/manage.js"></script>
 </head>
-
 <body>
-    <div class="sidebar">
-        <a href="dashboard.html" class="sidebar-link">Comparação de Colaboradores</a>
-        <a href="manage.html" class="sidebar-link">Gerenciar Colaboradores</a>
-        <a href="skills.html" class="sidebar-link active">Gerenciar Habilidades</a>
+    <div class="app">
+        <nav id="sidebar" class="sidebar" aria-label="Navegação principal"></nav>
+
+        <main class="main">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Colaboradores</h1>
+                    <p class="page-subtitle">Cadastre pessoas e atribua notas de 0 a 10 para cada habilidade.</p>
+                </div>
+                <button type="button" class="btn btn-primary" id="new-employee" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    Novo colaborador
+                </button>
+            </header>
+
+            <section class="card" aria-labelledby="table-title">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title" id="table-title">Equipe</h2>
+                        <p class="card-description" id="employee-count" aria-live="polite">Carregando…</p>
+                    </div>
+                    <label class="search">
+                        <span class="sr-only">Buscar colaborador</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="search" id="employee-search" class="input" placeholder="Buscar por nome" autocomplete="off">
+                    </label>
+                </div>
+                <div class="table-wrap" id="employees-table-wrap">
+                    <table class="table" id="employees-table">
+                        <caption class="sr-only">Colaboradores cadastrados e suas notas</caption>
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <p class="empty" id="employees-empty" hidden></p>
+            </section>
+        </main>
     </div>
 
-
-    <div class="dashboard-container">
-        <h1>Gerenciar Funcionários</h1>
-
-        <section>
-            <h2>Criar Novo Funcionário</h2>
-            <form id="create-form">
-                <label>Nome: <input type="text" id="new-name" required></label><br>
-                <label>Área: <input type="text" id="new-area" required></label><br>
-                <label>Paciência: <input type="number" id="new-patience" min="0" max="10" required></label><br>
-                <label>Versatilidade: <input type="number" id="new-versatility" min="0" max="10" required></label><br>
-                <label>Comunicação: <input type="number" id="new-communication" min="0" max="10" required></label><br>
-                <button type="submit">Criar</button>
-            </form>
-        </section>
-
-        <hr>
-
-        <section>
-            <h2>Funcionários Existentes</h2>
-            <table id="manage-table">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Área</th>
-                        <th>Paciência</th>
-                        <th>Versatilidade</th>
-                        <th>Comunicação</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-    </div>
-
-    <script src="/public/js/manage.js"></script>
+    <dialog class="modal" id="employee-dialog" aria-labelledby="employee-dialog-title">
+        <form class="modal-form" id="employee-form" novalidate>
+            <div class="modal-header">
+                <h2 class="modal-title" id="employee-dialog-title">Novo colaborador</h2>
+                <button type="button" class="icon-btn" id="employee-close" aria-label="Fechar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label class="label" for="employee-name">Nome</label>
+                    <input type="text" class="input" id="employee-name" maxlength="80" autocomplete="off" required>
+                </div>
+                <fieldset class="score-fields" id="employee-scores"></fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" id="employee-cancel">Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="employee-submit">Cadastrar</button>
+            </div>
+        </form>
+    </dialog>
 </body>
-
 </html>

@@ -1,33 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciar Habilidades</title>
-  <script src="/public/js/sidebar.js" defer></script>
-  <link rel="stylesheet" href="style.css">
-  <script src="skills.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Habilidades · Radar de Talentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <script type="module" src="/public/js/skills.js"></script>
 </head>
 <body>
-  <div class="sidebar">
-    <a href="dashboard.html" class="sidebar-link">Comparação de Colaboradores</a>
-    <a href="manage.html" class="sidebar-link">Gerenciar Colaboradores</a>
-    <a href="skills.html" class="sidebar-link active">Gerenciar Habilidades</a>
-  </div>
+    <div class="app">
+        <nav id="sidebar" class="sidebar" aria-label="Navegação principal"></nav>
 
-  <div class="dashboard-container">
-    <h1>Gerenciar Habilidades</h1>
-    
-    <section>
-      <h2>Habilidades Existentes</h2>
-      <ul id="skills-list"></ul>
-    </section>
-    
-    <section>
-      <h2>Adicionar Nova Habilidade</h2>
-      <input type="text" id="new-skill-name" placeholder="Nome da habilidade">
-      <button id="add-skill">Adicionar Habilidade</button>
-    </section>
-  </div>
+        <main class="main">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Habilidades</h1>
+                    <p class="page-subtitle">Defina quais habilidades são avaliadas. Elas viram os eixos do radar.</p>
+                </div>
+            </header>
+
+            <section class="card" aria-labelledby="add-title">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title" id="add-title">Nova habilidade</h2>
+                        <p class="card-description">Colaboradores existentes ficam como "não avaliado" até você editar as notas.</p>
+                    </div>
+                </div>
+                <form class="inline-form" id="skill-form">
+                    <div class="field">
+                        <label class="label" for="skill-name">Nome da habilidade</label>
+                        <input type="text" class="input" id="skill-name" maxlength="40" placeholder="Ex.: Liderança" autocomplete="off" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="skill-submit">Adicionar</button>
+                </form>
+            </section>
+
+            <section class="card section-gap" aria-labelledby="list-title">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title" id="list-title">Habilidades avaliadas</h2>
+                        <p class="card-description" id="skill-count" aria-live="polite">Carregando…</p>
+                    </div>
+                </div>
+                <ul class="skill-list" id="skill-list">
+                    <li class="skeleton" aria-hidden="true"></li>
+                    <li class="skeleton" aria-hidden="true"></li>
+                </ul>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
