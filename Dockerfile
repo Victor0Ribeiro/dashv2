@@ -1,5 +1,6 @@
 # Imagem de produção do Radar de Talentos.
-# A planilha fica num volume persistente em /data (monte um volume nesse caminho na hospedagem).
+# A planilha fica num volume persistente em /data. O volume é criado na hospedagem
+# (ex.: Railway Volumes), não aqui: o Railway rejeita a instrução VOLUME no Dockerfile.
 FROM node:22-alpine
 
 WORKDIR /app
@@ -15,7 +16,6 @@ RUN mkdir -p /data && chown -R node:node /data
 
 USER node
 EXPOSE 3001
-VOLUME ["/data"]
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
     CMD wget -qO- "http://127.0.0.1:${PORT}/healthz" || exit 1
