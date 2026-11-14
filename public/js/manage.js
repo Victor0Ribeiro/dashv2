@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { ledSector } from './metrics.js';
 import {
     h,
     icon,
@@ -12,6 +13,10 @@ import {
     normalize,
     byName,
     pluralize,
+    sectorOptions,
+    matchesSector,
+    ALL_SECTORS,
+    NO_SECTOR,
 } from './ui.js';
 
 renderShell('colaboradores');
@@ -21,6 +26,7 @@ const DEFAULT_SCORE = 5;
 const els = {
     count: document.getElementById('employee-count'),
     search: document.getElementById('employee-search'),
+    sectorFilter: document.getElementById('sector-filter'),
     newButton: document.getElementById('new-employee'),
     tableHead: document.querySelector('#employees-table thead'),
     tableBody: document.querySelector('#employees-table tbody'),
@@ -30,6 +36,9 @@ const els = {
     form: document.getElementById('employee-form'),
     dialogTitle: document.getElementById('employee-dialog-title'),
     nameInput: document.getElementById('employee-name'),
+    badgeInput: document.getElementById('employee-badge'),
+    badgeHint: document.getElementById('employee-badge-hint'),
+    sectorSelect: document.getElementById('employee-sector'),
     scores: document.getElementById('employee-scores'),
     submit: document.getElementById('employee-submit'),
     cancel: document.getElementById('employee-cancel'),
@@ -38,10 +47,28 @@ const els = {
 
 const state = {
     skills: [],
+    sectors: [],
     employees: [],
     query: '',
+    // Permite links como /colaboradores?setor=<id> (usado pela página de Setores).
+    sectorFilter: new URLSearchParams(window.location.search).get('setor') ?? ALL_SECTORS,
     editingId: null,
 };
+
+const sectorName = id => state.sectors.find(sector => sector.id === id)?.nome ?? null;
+
+// ---------- Filtros ----------
+
+function renderFilters() {
+    const valid =
+        state.sectorFilter === ALL_SECTORS ||
+        state.sectorFilter === NO_SECTOR ||
+        state.sectors.some(sector => sector.id === state.sectorFilter);
+    if (!valid) state.sectorFilter = ALL_SECTORS;
+    els.sectorFilter.replaceChildren(
+        ...sectorOptions(state.sectors, { all: true, none: true, selected: state.sectorFilter })
+    );
+}
 
 // ---------- Tabela ----------
 
@@ -49,7 +76,11 @@ function renderTable() {
     els.count.textContent = pluralize(state.employees.length, 'colaborador', 'colaboradores');
 
     const query = normalize(state.query.trim());
-    const visible = state.employees.filter(emp => normalize(emp.nome).includes(query));
+    const visible = state.employees.filter(
+        emp =>
+            matchesSector(emp, state.sectorFilter) &&
+            (normalize(emp.nome).includes(query) || normalize(emp.cracha ?? '').includes(query))
+    );
 
     if (visible.length === 0) {
         els.tableWrap.hidden = true;
@@ -57,7 +88,7 @@ function renderTable() {
         els.empty.textContent =
             state.employees.length === 0
                 ? 'Nenhum colaborador cadastrado ainda. Clique em "Novo colaborador" para começar.'
-                : `Nenhum resultado para "${state.query.trim()}".`;
+                : 'Nenhum colaborador encontrado com esses filtros.';
         return;
     }
     els.tableWrap.hidden = false;
@@ -68,6 +99,8 @@ function renderTable() {
             'tr',
             {},
             h('th', { scope: 'col' }, 'Colaborador'),
+            h('th', { scope: 'col' }, 'Crachá'),
+            h('th', { scope: 'col' }, 'Setor'),
             state.skills.map(skill => h('th', { scope: 'col' }, skill)),
             h('th', { scope: 'col' }, 'Média'),
             h('th', { scope: 'col', class: 'col-actions' }, h('span', { class: 'sr-only' }, 'Ações'))
@@ -75,8 +108,9 @@ function renderTable() {
     );
 
     els.tableBody.replaceChildren(
-        ...visible.map(emp =>
-            h(
+        ...visible.map(emp => {
+            const led = ledSector(emp, state.sectors);
+            return h(
                 'tr',
                 {},
                 h(
@@ -86,9 +120,18 @@ function renderTable() {
                         'span',
                         { class: 'person' },
                         h('span', { class: 'avatar', 'aria-hidden': 'true' }, initials(emp.nome)),
-                        emp.nome
+                        h('span', {}, emp.nome),
+                        led &&
+                            h(
+                                'span',
+                                { class: 'tag tag-leader', title: `Líder de ${led.nome}` },
+                                icon('crown', 12),
+                                'Líder'
+                            )
                     )
                 ),
+                h('td', {}, emp.cracha ?? h('span', { class: 'tag tag-muted' }, 'sem crachá')),
+                h('td', {}, sectorName(emp.setorId) ?? h('span', { class: 'tag tag-muted' }, 'sem setor')),
                 state.skills.map(skill => h('td', {}, scoreBadge(emp.notas[skill]))),
                 h('td', {}, scoreBadge(average(emp, state.skills))),
                 h(
@@ -121,8 +164,8 @@ function renderTable() {
                         )
                     )
                 )
-            )
-        )
+            );
+        })
     );
 }
 
@@ -155,9 +198,32 @@ function openDialog(employee = null) {
     els.dialogTitle.textContent = employee ? 'Editar colaborador' : 'Novo colaborador';
     els.submit.textContent = employee ? 'Salvar alterações' : 'Cadastrar';
     els.nameInput.value = employee?.nome ?? '';
+
+    // Crachá obrigatório, exceto para cadastros antigos que ainda não têm um.
+    const badgeOptional = Boolean(employee && !employee.cracha);
+    els.badgeInput.value = employee?.cracha ?? '';
+    els.badgeInput.required = !badgeOptional;
+    els.badgeHint.textContent = badgeOptional
+        ? 'Cadastro antigo sem crachá: preencha quando souber.'
+        : 'Identificador único (ex.: A-1024).';
+
+    // Ao criar com o filtro num setor, já sugere esse setor.
+    const presetSector = employee
+        ? employee.setorId ?? ''
+        : state.sectors.some(sector => sector.id === state.sectorFilter)
+          ? state.sectorFilter
+          : '';
+    els.sectorSelect.replaceChildren(
+        h('option', { value: '' }, 'Sem setor'),
+        ...sectorOptions(state.sectors, { selected: presetSector })
+    );
+    els.sectorSelect.value = presetSector;
+
     els.scores.replaceChildren(
         h('legend', {}, 'Notas (0 a 10)'),
-        ...state.skills.map((skill, index) => scoreField(skill, employee ? employee.notas[skill] : DEFAULT_SCORE, index))
+        ...state.skills.map((skill, index) =>
+            scoreField(skill, employee ? employee.notas[skill] : DEFAULT_SCORE, index)
+        )
     );
     els.dialog.showModal();
     els.nameInput.focus();
@@ -168,7 +234,21 @@ function readForm() {
     els.scores.querySelectorAll('input[type="range"]').forEach(input => {
         notas[input.dataset.skill] = Number(input.value);
     });
-    return { nome: els.nameInput.value.trim(), notas };
+    return {
+        nome: els.nameInput.value.trim(),
+        cracha: els.badgeInput.value.trim(),
+        setorId: els.sectorSelect.value || null,
+        notas,
+    };
+}
+
+async function refresh() {
+    const data = await api.getState();
+    state.skills = data.skills;
+    state.sectors = data.setores;
+    state.employees = [...data.employees].sort(byName);
+    renderFilters();
+    renderTable();
 }
 
 async function submitForm(event) {
@@ -179,21 +259,27 @@ async function submitForm(event) {
         toast('Informe o nome do colaborador.', 'warning');
         return;
     }
+    if (!data.cracha && els.badgeInput.required) {
+        els.badgeInput.focus();
+        toast('Informe o crachá do colaborador.', 'warning');
+        return;
+    }
+
+    const editing = Boolean(state.editingId);
+    const before = state.employees.find(emp => emp.id === state.editingId);
+    const wasLeading = before ? ledSector(before, state.sectors) : null;
 
     await withBusy(els.submit, async () => {
         try {
-            if (state.editingId) {
-                const updated = await api.updateEmployee(state.editingId, data);
-                state.employees = state.employees.map(emp => (emp.id === updated.id ? updated : emp));
-                toast(`${updated.nome} atualizado.`, 'success');
-            } else {
-                const created = await api.createEmployee(data);
-                state.employees.push(created);
-                toast(`${created.nome} cadastrado.`, 'success');
-            }
-            state.employees.sort(byName);
+            const saved = editing
+                ? await api.updateEmployee(state.editingId, data)
+                : await api.createEmployee(data);
             els.dialog.close();
-            renderTable();
+            await refresh();
+            toast(`${saved.nome} ${editing ? 'atualizado' : 'cadastrado'}.`, 'success');
+            if (wasLeading && saved.setorId !== wasLeading.id) {
+                toast(`${saved.nome} mudou de setor e deixou de ser líder de ${wasLeading.nome}.`, 'warning');
+            }
         } catch (err) {
             toast(err.message, 'error');
         }
@@ -201,9 +287,13 @@ async function submitForm(event) {
 }
 
 async function removeEmployee(employee, button) {
+    const led = ledSector(employee, state.sectors);
     const confirmed = await confirmDialog({
         title: 'Remover colaborador?',
-        message: `${employee.nome} e todas as suas notas serão removidos. Essa ação não pode ser desfeita.`,
+        message:
+            `${employee.nome} e todas as suas notas serão removidos.` +
+            (led ? ` O setor ${led.nome} ficará sem líder.` : '') +
+            ' Essa ação não pode ser desfeita.',
         confirmLabel: 'Remover',
         danger: true,
     });
@@ -212,8 +302,7 @@ async function removeEmployee(employee, button) {
     await withBusy(button, async () => {
         try {
             await api.deleteEmployee(employee.id);
-            state.employees = state.employees.filter(emp => emp.id !== employee.id);
-            renderTable();
+            await refresh();
             toast(`${employee.nome} removido.`, 'success');
         } catch (err) {
             toast(err.message, 'error');
@@ -231,15 +320,16 @@ els.search.addEventListener('input', () => {
     state.query = els.search.value;
     renderTable();
 });
+els.sectorFilter.addEventListener('change', () => {
+    state.sectorFilter = els.sectorFilter.value;
+    renderTable();
+});
 
 // ---------- Início ----------
 
 try {
-    const data = await api.getState();
-    state.skills = data.skills;
-    state.employees = [...data.employees].sort(byName);
+    await refresh();
     els.newButton.disabled = false;
-    renderTable();
 } catch (err) {
     els.tableWrap.hidden = true;
     els.empty.hidden = false;

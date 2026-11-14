@@ -2,7 +2,9 @@
   "dependencies": {
     "chart.js": "^4.6.1",
     "exceljs": "^4.4.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.9"
   },
   "scripts": {
     "start": "node server.js",

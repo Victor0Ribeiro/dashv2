@@ -11,6 +11,14 @@ const PAGES = {
     '/dashboard': 'dashboard.html',
     '/colaboradores': 'manage.html',
     '/habilidades': 'skills.html',
+    '/setores': 'sectors.html',
+};
+
+// Bibliotecas de front-end servidas do node_modules (versões fixadas no package-lock).
+const VENDOR = {
+    '/vendor/chart.js': ['chart.js', 'dist'],
+    '/vendor/jspdf': ['jspdf', 'dist'],
+    '/vendor/jspdf-autotable': ['jspdf-autotable', 'dist'],
 };
 
 // Endereços antigos continuam funcionando (ex.: links salvos ou o tutorial do portfólio).
@@ -37,12 +45,15 @@ function createApp({
     dataFile = process.env.DATA_FILE || path.join(__dirname, 'funcionarios.xlsx'),
     user = process.env.DASH_USER || 'Victor',
     pass = process.env.DASH_PASS || 'Ribeiro',
+    trustProxy = process.env.TRUST_PROXY === '1' || process.env.NODE_ENV === 'production',
 } = {}) {
     const store = createStore(dataFile);
     const auth = createAuth({ user, pass });
     const app = express();
 
     app.disable('x-powered-by');
+    // Atrás do proxy da hospedagem: IP real (bloqueio de login) e req.secure (cookie "secure").
+    if (trustProxy) app.set('trust proxy', 1);
     app.use((req, res, next) => {
         res.set({
             'Content-Security-Policy': CONTENT_SECURITY_POLICY,
@@ -55,7 +66,10 @@ function createApp({
     app.use(express.urlencoded({ extended: false, limit: '10kb' }));
 
     app.use('/public', express.static(path.join(__dirname, 'public')));
-    app.use('/vendor/chart.js', express.static(path.join(__dirname, 'node_modules', 'chart.js', 'dist')));
+    for (const [route, parts] of Object.entries(VENDOR)) {
+        app.use(route, express.static(path.join(__dirname, 'node_modules', ...parts)));
+    }
+    app.get('/healthz', (req, res) => res.type('text').send('ok'));
 
     for (const [from, to] of Object.entries(LEGACY_URLS)) {
         app.get(from, (req, res) => res.redirect(to));
@@ -117,6 +131,16 @@ function createApp({
         await store.removeSkill(req.params.nome);
         res.status(204).end();
     });
+    api.post('/setores', async (req, res) => {
+        res.status(201).json(await store.createSector(req.body));
+    });
+    api.put('/setores/:id', async (req, res) => {
+        res.json(await store.updateSector(req.params.id, req.body));
+    });
+    api.delete('/setores/:id', async (req, res) => {
+        await store.deleteSector(req.params.id);
+        res.status(204).end();
+    });
     api.use((req, res) => res.status(404).json({ ok: false, error: 'Rota não encontrada.' }));
 
     app.use('/api', api);
@@ -140,6 +164,11 @@ function createApp({
 }
 
 if (require.main === module) {
+    // Em produção não sobe com as credenciais de demonstração (elas estão no repositório).
+    if (process.env.NODE_ENV === 'production' && (!process.env.DASH_USER || !process.env.DASH_PASS)) {
+        console.error('Defina DASH_USER e DASH_PASS para rodar em produção.');
+        process.exit(1);
+    }
     const port = Number(process.env.PORT) || 3001;
     createApp().listen(port, () => console.log(`Servidor rodando em http://localhost:${port}`));
 }

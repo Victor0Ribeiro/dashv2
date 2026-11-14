@@ -38,4 +38,7 @@ export const api = {
     deleteEmployee: id => request('DELETE', employeeUrl(id)),
     addSkill: nome => request('POST', '/api/skills', { nome }),
     removeSkill: nome => request('DELETE', `/api/skills/${encodeURIComponent(nome)}`),
+    createSector: nome => request('POST', '/api/setores', { nome }),
+    updateSector: (id, data) => request('PUT', `/api/setores/${encodeURIComponent(id)}`, data),
+    deleteSector: id => request('DELETE', `/api/setores/${encodeURIComponent(id)}`),
 };

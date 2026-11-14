@@ -25,6 +25,9 @@ const ICONS = {
     ],
     check: ['M20 6 9 17l-5-5'],
     x: ['M18 6 6 18', 'm6 6 12 12'],
+    building: ['M3 21h18', 'M5 21V7l8-4v18', 'M19 21V11l-6-4', 'M9 9v.01', 'M9 12v.01', 'M9 15v.01', 'M9 18v.01'],
+    crown: ['m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7Z', 'M5 20h14'],
+    download: ['M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4', 'm7 10 5 5 5-5', 'M12 15V3'],
 };
 
 export function icon(name, size = 18) {
@@ -75,6 +78,7 @@ export function h(tag, props = {}, ...children) {
 const NAV_ITEMS = [
     { key: 'dashboard', href: '/dashboard', label: 'Comparação', icon: 'chart' },
     { key: 'colaboradores', href: '/colaboradores', label: 'Colaboradores', icon: 'users' },
+    { key: 'setores', href: '/setores', label: 'Setores', icon: 'building' },
     { key: 'habilidades', href: '/habilidades', label: 'Habilidades', icon: 'star' },
 ];
 
@@ -191,13 +195,93 @@ export async function withBusy(button, task) {
     }
 }
 
+/** Diálogo com um campo de texto. Resolve com o texto digitado, ou null se cancelado. */
+export function promptDialog({ title, label, value = '', confirmLabel = 'Salvar', maxLength = 80 }) {
+    return new Promise(resolve => {
+        let result = null;
+        const input = h('input', { type: 'text', class: 'input', id: 'prompt-input', value, maxlength: maxLength, autocomplete: 'off', required: true });
+        const cancelButton = h('button', { type: 'button', class: 'btn btn-ghost' }, 'Cancelar');
+        const form = h(
+            'form',
+            { class: 'modal-form', method: 'dialog' },
+            h(
+                'div',
+                { class: 'modal-body' },
+                h('h2', { class: 'modal-title', id: 'prompt-title' }, title),
+                h('div', { class: 'field' }, h('label', { class: 'label', for: 'prompt-input' }, label), input)
+            ),
+            h('div', { class: 'modal-footer' }, cancelButton, h('button', { type: 'submit', class: 'btn btn-primary' }, confirmLabel))
+        );
+        const dialog = h('dialog', { class: 'modal modal-sm', 'aria-labelledby': 'prompt-title' }, form);
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const text = input.value.trim();
+            if (!text) {
+                input.focus();
+                return;
+            }
+            result = text;
+            dialog.close();
+        });
+        cancelButton.addEventListener('click', () => dialog.close());
+        dialog.addEventListener('close', () => {
+            dialog.remove();
+            resolve(result);
+        });
+
+        document.body.append(dialog);
+        dialog.showModal();
+        input.select();
+    });
+}
+
+/** Carrega um script (uma única vez) sob demanda — ex.: bibliotecas de PDF. */
+const loadedScripts = new Map();
+export function loadScript(src) {
+    if (!loadedScripts.has(src)) {
+        loadedScripts.set(
+            src,
+            new Promise((resolve, reject) => {
+                const script = h('script', { src });
+                script.addEventListener('load', resolve);
+                script.addEventListener('error', () => {
+                    loadedScripts.delete(src);
+                    reject(new Error('Não foi possível carregar um recurso. Verifique a conexão e tente novamente.'));
+                });
+                document.head.append(script);
+            })
+        );
+    }
+    return loadedScripts.get(src);
+}
+
+/** Opções de <select> de setor. `all` e `none` adicionam "Todos os setores" e "Sem setor". */
+export const ALL_SECTORS = '__todos__';
+export const NO_SECTOR = '__sem_setor__';
+export function sectorOptions(sectors, { all = false, none = false, noneLabel = 'Sem setor', selected = '' } = {}) {
+    const options = [];
+    if (all) options.push(h('option', { value: ALL_SECTORS }, 'Todos os setores'));
+    if (none) options.push(h('option', { value: NO_SECTOR }, noneLabel));
+    [...sectors]
+        .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' }))
+        .forEach(sector => options.push(h('option', { value: sector.id }, sector.nome)));
+    options.forEach(option => {
+        option.selected = option.value === selected;
+    });
+    return options;
+}
+
+/** Filtra colaboradores pelo valor de um select criado com sectorOptions. */
+export function matchesSector(employee, filter) {
+    if (!filter || filter === ALL_SECTORS) return true;
+    if (filter === NO_SECTOR) return !employee.setorId;
+    return employee.setorId === filter;
+}
+
 // ---------- Dados ----------
 
-export function average(employee, skills) {
-    const values = skills.map(skill => employee.notas[skill]).filter(value => typeof value === 'number');
-    if (values.length === 0) return null;
-    return values.reduce((sum, value) => sum + value, 0) / values.length;
-}
+export { average } from './metrics.js';
 
 const numberFormat = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
 

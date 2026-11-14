@@ -33,11 +33,17 @@
                         <h2 class="card-title" id="table-title">Equipe</h2>
                         <p class="card-description" id="employee-count" aria-live="polite">Carregando…</p>
                     </div>
-                    <label class="search">
-                        <span class="sr-only">Buscar colaborador</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                        <input type="search" id="employee-search" class="input" placeholder="Buscar por nome" autocomplete="off">
-                    </label>
+                    <div class="filters-inline">
+                        <label class="search">
+                            <span class="sr-only">Buscar colaborador</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                            <input type="search" id="employee-search" class="input" placeholder="Buscar por nome ou crachá" autocomplete="off">
+                        </label>
+                        <label class="sr-only" for="sector-filter">Filtrar por setor</label>
+                        <select class="input" id="sector-filter">
+                            <option value="__todos__">Todos os setores</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="table-wrap" id="employees-table-wrap">
                     <table class="table" id="employees-table">
@@ -63,6 +69,18 @@
                 <div class="field">
                     <label class="label" for="employee-name">Nome</label>
                     <input type="text" class="input" id="employee-name" maxlength="80" autocomplete="off" required>
+                </div>
+                <div class="filters">
+                    <div class="field">
+                        <label class="label" for="employee-badge">Crachá</label>
+                        <input type="text" class="input" id="employee-badge" maxlength="20" autocomplete="off" aria-describedby="employee-badge-hint" required>
+                        <span class="hint" id="employee-badge-hint">Identificador único (ex.: A-1024).</span>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="employee-sector">Setor</label>
+                        <select class="input" id="employee-sector"></select>
+                        <span class="hint">Gerencie setores e líderes em <a href="/setores">Setores</a>.</span>
+                    </div>
                 </div>
                 <fieldset class="score-fields" id="employee-scores"></fieldset>
             </div>

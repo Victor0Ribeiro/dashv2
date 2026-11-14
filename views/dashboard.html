@@ -19,15 +19,23 @@
         <main class="main">
             <header class="page-header">
                 <div>
-                    <h1 class="page-title">Comparação de colaboradores</h1>
-                    <p class="page-subtitle">Selecione até 6 pessoas para comparar as habilidades lado a lado.</p>
+                    <h1 class="page-title">Comparação</h1>
+                    <p class="page-subtitle">Compare até 6 pessoas ou setores. Líderes também são avaliados pela nota do time.</p>
                 </div>
+                <button type="button" class="btn btn-ghost" id="export-pdf" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                    Exportar PDF
+                </button>
             </header>
 
             <section class="stats" aria-label="Resumo">
                 <div class="stat">
                     <span class="stat-label">Colaboradores</span>
                     <strong class="stat-value" id="stat-employees">–</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Setores</span>
+                    <strong class="stat-value" id="stat-sectors">–</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-label">Habilidades</span>
@@ -43,14 +51,27 @@
                 <section class="card" aria-labelledby="list-title">
                     <div class="card-header">
                         <h2 class="card-title" id="list-title">Colaboradores</h2>
+                        <div class="segmented" role="group" aria-label="Comparar">
+                            <button type="button" data-mode="pessoas" aria-pressed="true">Pessoas</button>
+                            <button type="button" data-mode="setores" aria-pressed="false">Setores</button>
+                        </div>
+                    </div>
+                    <div class="filters filters-stack">
+                        <label class="search">
+                            <span class="sr-only">Buscar</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                            <input type="search" id="employee-search" class="input" placeholder="Buscar por nome ou crachá" autocomplete="off">
+                        </label>
+                        <label class="sr-only" for="sector-filter">Filtrar por setor</label>
+                        <select class="input" id="sector-filter">
+                            <option value="__todos__">Todos os setores</option>
+                        </select>
+                    </div>
+                    <div class="list-actions">
+                        <button type="button" class="btn btn-ghost btn-sm" id="select-sector" disabled title="Escolha um setor no filtro">Comparar setor</button>
                         <button type="button" class="btn btn-ghost btn-sm" id="clear-selection" disabled>Limpar seleção</button>
                     </div>
-                    <label class="search">
-                        <span class="sr-only">Buscar colaborador</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                        <input type="search" id="employee-search" class="input" placeholder="Buscar por nome" autocomplete="off">
-                    </label>
-                    <ul id="employee-list" class="chip-list" aria-label="Colaboradores disponíveis">
+                    <ul id="employee-list" class="chip-list" aria-label="Itens disponíveis para comparação">
                         <li class="skeleton" aria-hidden="true"></li>
                         <li class="skeleton" aria-hidden="true"></li>
                         <li class="skeleton" aria-hidden="true"></li>
@@ -60,13 +81,19 @@
                 <section class="card" aria-labelledby="chart-title">
                     <div class="card-header">
                         <h2 class="card-title" id="chart-title">Radar de habilidades</h2>
-                        <span class="badge" id="selection-count" aria-live="polite">0 selecionados</span>
+                        <div class="list-actions">
+                            <label class="toggle" id="show-teams-wrap">
+                                <input type="checkbox" id="show-teams" checked>
+                                Mostrar time dos líderes
+                            </label>
+                            <span class="badge" id="selection-count" aria-live="polite">0 selecionados</span>
+                        </div>
                     </div>
                     <div class="chart-wrap">
-                        <canvas id="radar-chart" role="img" aria-label="Gráfico radar com as notas dos colaboradores selecionados. Os mesmos valores estão na tabela de detalhamento."></canvas>
+                        <canvas id="radar-chart" role="img" aria-label="Gráfico radar com as notas dos itens selecionados. Os mesmos valores estão na tabela de detalhamento."></canvas>
                         <div class="chart-empty" id="chart-empty">
-                            <p>Nenhum colaborador selecionado</p>
-                            <p>Escolha pessoas na lista para ver o radar.</p>
+                            <p>Nada selecionado</p>
+                            <p>Escolha itens na lista para ver o radar.</p>
                         </div>
                     </div>
                 </section>
@@ -83,12 +110,13 @@
                 </div>
                 <div class="table-wrap" id="compare-table-wrap" hidden>
                     <table class="table" id="compare-table">
-                        <caption class="sr-only">Notas dos colaboradores selecionados. O contorno indica a maior nota da coluna.</caption>
+                        <caption class="sr-only">Notas dos itens selecionados. O contorno indica a maior nota da coluna.</caption>
                         <thead></thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <p class="empty" id="table-empty">Selecione colaboradores para ver as notas em detalhe.</p>
+                <p class="hint" id="table-note" hidden>Nota do time: média das notas dos liderados do setor (o líder não entra no cálculo). No radar, aparece como linha tracejada.</p>
+                <p class="empty" id="table-empty">Selecione itens para ver as notas em detalhe.</p>
             </section>
         </main>
     </div>
