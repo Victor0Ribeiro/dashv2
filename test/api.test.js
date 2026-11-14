@@ -98,6 +98,13 @@ describe('API', () => {
         assert.equal(res.headers.get('set-cookie'), null);
     });
 
+    test('login aceita usuário em qualquer caixa e ignora espaços nas pontas', async () => {
+        const res = await postLogin(ctx.base, `  ${USER.toUpperCase()} `, ` ${PASS}  `);
+        assert.equal(res.headers.get('location'), '/dashboard');
+        const wrongCase = await postLogin(ctx.base, USER, PASS.toUpperCase());
+        assert.equal(wrongCase.headers.get('location'), '/login?erro=credenciais');
+    });
+
     test('bloqueia após várias tentativas erradas', async () => {
         for (let i = 0; i < 5; i++) await postLogin(ctx.base, USER, 'errada');
         const res = await postLogin(ctx.base, USER, PASS);
